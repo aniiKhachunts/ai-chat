@@ -1,5 +1,5 @@
-import type { ModelType, VideoInputMode, Conversation } from "../App";
-import { MessageList } from "./MessageList";
+import type {ModelType, VideoInputMode, Conversation} from "../App";
+import {MessageList} from "./MessageList";
 import MessageInput from "./MessageInput";
 
 type ChatProps = {
@@ -67,7 +67,7 @@ function Chat({
         <section className="chat-area">
             <header className="chat-header">
                 <div className="chat-title">
-                    <div className="chat-title-badge" />
+                    <div className="chat-title-badge"/>
                     <div>
                         <div className="chat-title-text">{title}</div>
                     </div>
@@ -76,7 +76,7 @@ function Chat({
 
             <div className="messages-wrapper">
                 <div className="messages-inner">
-                    {conversation && <MessageList messages={conversation.messages} />}
+                    {conversation && <MessageList messages={conversation.messages}/>}
                 </div>
             </div>
 
@@ -141,7 +141,7 @@ function Chat({
 
                                     {videoImageBase64 && (
                                         <div className="image-preview">
-                                            <img src={videoImageBase64} alt="Preview" />
+                                            <img src={videoImageBase64} alt="Preview"/>
                                             <button
                                                 type="button"
                                                 className="clear-image-button"

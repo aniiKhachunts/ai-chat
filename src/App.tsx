@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import "./App.css";
 import Chat from "./components/Chat";
 import { Sidebar } from "./components/Sidebar";
@@ -23,21 +23,17 @@ export type Conversation = {
 };
 
 function App() {
-    const [conversations, setConversations] = useState<Conversation[]>([]);
-    const [selectedConversationId, setSelectedConversationId] = useState<number | null>(null);
-    const [selectedModel, setSelectedModel] = useState<ModelType>("chat");
-    const [videoInputMode, setVideoInputMode] = useState<VideoInputMode>("text");
-    const [videoImageBase64, setVideoImageBase64] = useState<string | null>(null);
+    const initialConversationId = 1;
 
-    useEffect(() => {
-        if (!conversations.length) {
-            const now = new Date().toLocaleTimeString();
-            const conv: Conversation = {
-                id: Date.now(),
+    const [conversations, setConversations] = useState<Conversation[]>(() => {
+        const now = new Date().toLocaleTimeString();
+        return [
+            {
+                id: initialConversationId,
                 title: "New chat",
                 messages: [
                     {
-                        id: Date.now() + 1,
+                        id: 1,
                         role: "assistant",
                         content:
                             "Hi! Choose a model and start typing. Switch to a video model to generate clips.",
@@ -45,11 +41,18 @@ function App() {
                         kind: "text"
                     }
                 ]
-            };
-            setConversations([conv]);
-            setSelectedConversationId(conv.id);
-        }
-    }, [conversations.length]);
+            }
+        ];
+    });
+
+    const [selectedConversationId, setSelectedConversationId] =
+        useState<number | null>(initialConversationId);
+
+    const [selectedModel, setSelectedModel] = useState<ModelType>("chat");
+    const [videoInputMode, setVideoInputMode] = useState<VideoInputMode>("text");
+    const [videoImageBase64, setVideoImageBase64] = useState<string | null>(null);
+
+    const messageIdRef = useRef(2);
 
     const selectedConversation = useMemo(
         () => conversations.find((c) => c.id === selectedConversationId) ?? null,
@@ -81,9 +84,9 @@ function App() {
     }
 
     function handleDeleteConversation(id: number) {
-        setConversations((prev) => prev.filter((c) => c.id !== id));
+        const remaining = conversations.filter((c) => c.id !== id);
+        setConversations(remaining);
         if (selectedConversationId === id) {
-            const remaining = conversations.filter((c) => c.id !== id);
             setSelectedConversationId(remaining[0]?.id ?? null);
         }
     }
@@ -109,8 +112,10 @@ function App() {
         if (!targetId) return;
 
         const now = new Date().toLocaleTimeString();
+        const newMessageId = messageIdRef.current++;
+
         const userMessage: Message = {
-            id: Date.now(),
+            id: newMessageId,
             role: "user",
             content: trimmed,
             createdAt: now,
@@ -182,12 +187,8 @@ function App() {
             }
 
             const reply =
-                data &&
-                data.choices &&
-                data.choices[0] &&
-                data.choices[0].message &&
-                data.choices[0].message.content
-                    ? data.choices[0].message.content
+                data && typeof data.reply === "string"
+                    ? data.reply
                     : "";
 
             addAssistantMessage(targetId, reply, "text");
@@ -386,8 +387,9 @@ function App() {
         kind: MessageKind,
         mediaUrl?: string
     ) {
+        const newMessageId = messageIdRef.current++;
         const message: Message = {
-            id: Date.now(),
+            id: newMessageId,
             role: "assistant",
             content,
             createdAt: new Date().toLocaleTimeString(),

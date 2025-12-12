@@ -1,15 +1,15 @@
-import { useEffect, useRef } from "react";
+import {useEffect, useRef} from "react";
 import type {Message} from "../App";
 
 type MessageListProps = {
     messages: Message[];
 };
 
-export function MessageList({ messages }: MessageListProps) {
+export function MessageList({messages}: MessageListProps) {
     const endRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-        endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+        endRef.current?.scrollIntoView({behavior: "smooth", block: "end"});
     }, [messages]);
 
     return (
@@ -19,7 +19,7 @@ export function MessageList({ messages }: MessageListProps) {
 
                 const content =
                     msg.kind === "video" && msg.mediaUrl ? (
-                        <video src={msg.mediaUrl} controls className="chat-video" />
+                        <video src={msg.mediaUrl} controls className="chat-video"/>
                     ) : (
                         msg.content
                     );
@@ -51,7 +51,7 @@ export function MessageList({ messages }: MessageListProps) {
                     </div>
                 );
             })}
-            <div ref={endRef} />
+            <div ref={endRef}/>
         </>
     );
 }
