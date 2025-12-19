@@ -2,7 +2,7 @@ import {useEffect, useMemo, useState} from "react"
 import {useLocation, useNavigate} from "react-router-dom"
 import {PROMPTS} from "../../data/prompts"
 import "./prompts.css"
-import "../Home/Home.css"
+import "../Home/home.css"
 
 type PromptItem = {
     id: string
@@ -38,12 +38,11 @@ export default function Prompts() {
             <header className="home-header">
                 <div className="home-header-inner home-container">
                     <a className="home-brand" href="/">
-                        <span className="home-logo" />
+                        <span className="home-logo"/>
                         <span className="home-brand-text">AI Chat</span>
                     </a>
 
                     <div className="home-actions">
-                        <a className="home-ghost" href="/">Back</a>
                         <a className="home-primary" href="/chat">Start</a>
                     </div>
                 </div>
@@ -102,7 +101,7 @@ function PromptRow({
     }
 
     return (
-        <div className={`prompt ${open ? "open" : ""}`} data-open={open ? "1" : "0"}>
+        <section id="prompts" className={`prompt ${open ? "open" : ""}`} data-open={open ? "1" : "0"}>
             <button type="button" className="prompt-head" onClick={onToggle}>
                 <span className="prompt-title">{prompt.title}</span>
                 <span className="prompt-plus">{open ? "–" : "+"}</span>
@@ -129,7 +128,7 @@ function PromptRow({
                     </button>
                 </div>
             </div>
-        </div>
+        </section>
     )
 }
 
